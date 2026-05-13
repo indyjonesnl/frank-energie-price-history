@@ -32,6 +32,8 @@ for (const d of days) {
 }
 const negFeedDayCount = (daysInMonth: typeof days) =>
   daysInMonth.filter(d => d.electricity.hours.some(h => h.all_in_feed_in !== null && h.all_in_feed_in < 0)).length;
+const negFeedDaysTotal = days.filter(d => d.electricity.hours.some(h => h.all_in_feed_in !== null && h.all_in_feed_in < 0)).length;
+const negFeedHoursTotal = days.reduce((n, d) => n + d.electricity.hours.filter(h => h.all_in_feed_in !== null && h.all_in_feed_in < 0).length, 0);
 const points = [...months.entries()].map(([k, daysInMonth]) => {
   const wc = negFeedDayCount(daysInMonth);
   return {
@@ -49,6 +51,11 @@ const desc = `Monthly-average Frank Energie electricity feed-in prices for ${yea
 <Layout title={title} description={desc} path={`/feed-in/year/${year}/`}>
   <Breadcrumbs items={crumbs} />
   <h1>Electricity (feed-in) in {year}</h1>
+  {negFeedHoursTotal > 0 && (
+    <p class="negative-warning text-sm text-orange-600 -mt-2 mb-2">
+      Negative prices: {negFeedDaysTotal} {negFeedDaysTotal === 1 ? 'day' : 'days'}, {negFeedHoursTotal} {negFeedHoursTotal === 1 ? 'hour' : 'hours'} total
+    </p>
+  )}
   <SvgChart title="Monthly average feed-in" points={points} unit="EUR/kWh" xAxisLabel="Month" />
   <section>
     <h2>Months</h2>

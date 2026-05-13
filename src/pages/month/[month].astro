@@ -32,6 +32,10 @@ const negBuyHours = (d: typeof days[number]) =>
   d.electricity.hours.filter(h => h.all_in_buy !== null && h.all_in_buy < 0).length;
 const negFeedHours = (d: typeof days[number]) =>
   d.electricity.hours.filter(h => h.all_in_feed_in !== null && h.all_in_feed_in < 0).length;
+const negBuyDaysTotal = days.filter(d => negBuyHours(d) > 0).length;
+const negBuyHoursTotal = days.reduce((n, d) => n + negBuyHours(d), 0);
+const negFeedDaysTotal = days.filter(d => negFeedHours(d) > 0).length;
+const negFeedHoursTotal = days.reduce((n, d) => n + negFeedHours(d), 0);
 const buyDaily = days.map(d => {
   const wc = negBuyHours(d);
   return {
@@ -61,8 +65,24 @@ const desc = `Daily-average Frank Energie buy, feed-in and gas prices for ${mont
   <Breadcrumbs items={crumbs} />
   <h1>{monthYear}</h1>
   <p>{humanDate(range.from)} – {humanDate(range.to)}</p>
-  <section><h2>Electricity (buy)</h2><SvgChart title="Daily average buy" points={buyDaily} unit="EUR/kWh" xAxisLabel="Day of month" /></section>
-  <section><h2>Electricity (feed-in)</h2><SvgChart title="Daily average feed-in" points={feedDaily} unit="EUR/kWh" xAxisLabel="Day of month" /></section>
+  <section>
+    <h2>Electricity (buy)</h2>
+    {negBuyHoursTotal > 0 && (
+      <p class="negative-warning text-sm text-orange-600 -mt-2 mb-2">
+        Negative prices: {negBuyDaysTotal} {negBuyDaysTotal === 1 ? 'day' : 'days'}, {negBuyHoursTotal} {negBuyHoursTotal === 1 ? 'hour' : 'hours'} total
+      </p>
+    )}
+    <SvgChart title="Daily average buy" points={buyDaily} unit="EUR/kWh" xAxisLabel="Day of month" />
+  </section>
+  <section>
+    <h2>Electricity (feed-in)</h2>
+    {negFeedHoursTotal > 0 && (
+      <p class="negative-warning text-sm text-orange-600 -mt-2 mb-2">
+        Negative prices: {negFeedDaysTotal} {negFeedDaysTotal === 1 ? 'day' : 'days'}, {negFeedHoursTotal} {negFeedHoursTotal === 1 ? 'hour' : 'hours'} total
+      </p>
+    )}
+    <SvgChart title="Daily average feed-in" points={feedDaily} unit="EUR/kWh" xAxisLabel="Day of month" />
+  </section>
   <section><h2>Gas</h2><SvgChart title="Daily average gas" points={gasDaily} unit="EUR/m3" xAxisLabel="Day of month" /></section>
   <section>
     <h2>Days</h2>

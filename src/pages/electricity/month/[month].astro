@@ -31,6 +31,8 @@ const crumbs = [
 ];
 const negBuyHours = (d: typeof days[number]) =>
   d.electricity.hours.filter(h => h.all_in_buy !== null && h.all_in_buy < 0).length;
+const negBuyDaysTotal = days.filter(d => negBuyHours(d) > 0).length;
+const negBuyHoursTotal = days.reduce((n, d) => n + negBuyHours(d), 0);
 const points = days.map(d => {
   const wc = negBuyHours(d);
   return {
@@ -47,6 +49,11 @@ const desc = `Daily-average Frank Energie electricity buy prices for ${monthYear
 <Layout title={title} description={desc} path={`/electricity/month/${month}/`}>
   <Breadcrumbs items={crumbs} />
   <h1>Electricity (buy) in {monthYear}</h1>
+  {negBuyHoursTotal > 0 && (
+    <p class="negative-warning text-sm text-orange-600 -mt-2 mb-2">
+      Negative prices: {negBuyDaysTotal} {negBuyDaysTotal === 1 ? 'day' : 'days'}, {negBuyHoursTotal} {negBuyHoursTotal === 1 ? 'hour' : 'hours'} total
+    </p>
+  )}
   <p>{humanDate(range.from)} – {humanDate(range.to)}</p>
   <SvgChart title="Daily average buy" points={points} unit="EUR/kWh" xAxisLabel="Day of month" />
   <section>

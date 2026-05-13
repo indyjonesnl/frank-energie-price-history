@@ -32,6 +32,8 @@ for (const d of days) {
 }
 const negBuyDayCount = (daysInMonth: typeof days) =>
   daysInMonth.filter(d => d.electricity.hours.some(h => h.all_in_buy !== null && h.all_in_buy < 0)).length;
+const negBuyDaysTotal = days.filter(d => d.electricity.hours.some(h => h.all_in_buy !== null && h.all_in_buy < 0)).length;
+const negBuyHoursTotal = days.reduce((n, d) => n + d.electricity.hours.filter(h => h.all_in_buy !== null && h.all_in_buy < 0).length, 0);
 const points = [...months.entries()].map(([k, daysInMonth]) => {
   const wc = negBuyDayCount(daysInMonth);
   return {
@@ -49,6 +51,11 @@ const desc = `Monthly-average Frank Energie electricity buy prices for ${year}.`
 <Layout title={title} description={desc} path={`/electricity/year/${year}/`}>
   <Breadcrumbs items={crumbs} />
   <h1>Electricity (buy) in {year}</h1>
+  {negBuyHoursTotal > 0 && (
+    <p class="negative-warning text-sm text-orange-600 -mt-2 mb-2">
+      Negative prices: {negBuyDaysTotal} {negBuyDaysTotal === 1 ? 'day' : 'days'}, {negBuyHoursTotal} {negBuyHoursTotal === 1 ? 'hour' : 'hours'} total
+    </p>
+  )}
   <SvgChart title="Monthly average buy" points={points} unit="EUR/kWh" xAxisLabel="Month" />
   <section>
     <h2>Months</h2>
