@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "kinds": [
+    "day",
+    "week",
+    "month",
+    "year"
+  ],
+  "url_patterns": {
+    "day": "/api/v1/aggregates/day/{YYYY-MM-DD}.json",
+    "week": "/api/v1/aggregates/week/{YYYY-Www}.json",
+    "month": "/api/v1/aggregates/month/{YYYY-MM}.json",
+    "year": "/api/v1/aggregates/year/{YYYY}.json"
+  },
+  "earliest": "2023-01-01",
+  "latest": "2026-05-13",
+  "counts": {
+    "day": 1229,
+    "week": 177,
+    "month": 41,
+    "year": 4
+  }
+}

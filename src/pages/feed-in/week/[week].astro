@@ -1,0 +1,37 @@
+---
+import Layout from '@components/Layout.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import SvgChart from '@components/SvgChart.astro';
+import { loadAllDays } from '@lib/data-loader';
+import { avg } from '@lib/stats';
+import { isoWeekKey, weekRange } from '@lib/periods';
+import { humanDate } from '@lib/format';
+import { withBase } from '@lib/seo';
+
+export async function getStaticPaths() {
+  const days = loadAllDays();
+  const weeks = new Map<string, typeof days>();
+  for (const d of days) {
+    const k = isoWeekKey(new Date(`${d.date}T12:00:00Z`));
+    weeks.set(k, [...(weeks.get(k) ?? []), d]);
+  }
+  return [...weeks.entries()].map(([week, daysInWeek]) => ({ params: { week }, props: { week, days: daysInWeek } }));
+}
+
+const { week, days } = Astro.props;
+const range = weekRange(week);
+const crumbs = [
+  { label: 'Home', href: withBase('/') },
+  { label: 'Electricity (feed-in)', href: withBase('/feed-in/') },
+  { label: `Week ${week}` }
+];
+const points = days.map(d => ({ label: d.date.slice(5), value: avg(d.electricity.hours.map(h => h.all_in_feed_in ?? 0)), href: withBase(`/feed-in/day/${d.date}/`) }));
+const title = `Electricity feed-in prices in week ${week} — Frank Energie`;
+const desc = `Daily-average Frank Energie electricity feed-in prices for week ${week} (${humanDate(range.from)} – ${humanDate(range.to)}).`;
+---
+<Layout title={title} description={desc} path={`/feed-in/week/${week}/`}>
+  <Breadcrumbs items={crumbs} />
+  <h1>Electricity (feed-in) in week {week}</h1>
+  <p>{humanDate(range.from)} – {humanDate(range.to)}</p>
+  <SvgChart title="Daily average feed-in" points={points} unit="EUR/kWh" xAxisLabel="Day" />
+</Layout>

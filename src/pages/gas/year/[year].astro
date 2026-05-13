@@ -1,0 +1,61 @@
+---
+import Layout from '@components/Layout.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import SvgChart from '@components/SvgChart.astro';
+import { loadAllDays } from '@lib/data-loader';
+import { avg } from '@lib/stats';
+import { yearKey, monthKey } from '@lib/periods';
+import { withBase, isActive } from '@lib/seo';
+import { monthName } from '@lib/format';
+
+export async function getStaticPaths() {
+  const days = loadAllDays();
+  const years = new Map<string, typeof days>();
+  for (const d of days) {
+    const k = yearKey(new Date(`${d.date}T12:00:00Z`));
+    years.set(k, [...(years.get(k) ?? []), d]);
+  }
+  return [...years.entries()].map(([year, daysInYear]) => ({ params: { year }, props: { year, days: daysInYear } }));
+}
+
+const { year, days } = Astro.props;
+const currentPath = `/gas/year/${year}/`;
+const crumbs = [
+  { label: 'Home', href: withBase('/') },
+  { label: 'Gas', href: withBase('/gas/') },
+  { label: year }
+];
+const months = new Map<string, typeof days>();
+for (const d of days) {
+  const k = monthKey(new Date(`${d.date}T12:00:00Z`));
+  months.set(k, [...(months.get(k) ?? []), d]);
+}
+const points = [...months.entries()].map(([k, daysInMonth]) => ({
+  label: monthName(k),
+  shortLabel: monthName(k, true),
+  value: avg(daysInMonth.flatMap(d => d.gas.blocks.map(b => b.all_in ?? 0))),
+  href: withBase(`/gas/month/${k}/`),
+}));
+const title = `Gas prices in ${year} — Frank Energie`;
+const desc = `Monthly-average Frank Energie gas prices for ${year}.`;
+---
+<Layout title={title} description={desc} path={`/gas/year/${year}/`}>
+  <Breadcrumbs items={crumbs} />
+  <h1>Gas in {year}</h1>
+  <SvgChart title="Monthly average gas" points={points} unit="EUR/m3" xAxisLabel="Month" />
+  <section>
+    <h2>Months</h2>
+    <ul class="flex flex-wrap gap-x-3 gap-y-1 text-sm">
+      {[...months.keys()].sort().map((mk) => {
+        const targetPath = `/gas/month/${mk}/`;
+        return (
+          <li>
+            {isActive(currentPath, targetPath)
+              ? <span class="text-slate-900 font-medium">{monthName(mk, true)}</span>
+              : <a href={withBase(targetPath)} class="inline-block py-1 text-blue-600 hover:underline">{monthName(mk, true)}</a>}
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+</Layout>

@@ -1,0 +1,41 @@
+---
+import Layout from '@components/Layout.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import SvgChart from '@components/SvgChart.astro';
+import { loadAllDays } from '@lib/data-loader';
+import { avg } from '@lib/stats';
+import { isoWeekKey, weekRange } from '@lib/periods';
+import { humanDate } from '@lib/format';
+import { withBase } from '@lib/seo';
+
+export async function getStaticPaths() {
+  const days = loadAllDays();
+  const weeks = new Map<string, typeof days>();
+  for (const d of days) {
+    const k = isoWeekKey(new Date(`${d.date}T12:00:00Z`));
+    weeks.set(k, [...(weeks.get(k) ?? []), d]);
+  }
+  return [...weeks.entries()].map(([week, daysInWeek]) => ({ params: { week }, props: { week, days: daysInWeek } }));
+}
+
+const { week, days } = Astro.props;
+const range = weekRange(week);
+const crumbs = [
+  { label: 'Home', href: withBase('/') },
+  { label: `Week ${week}` }
+];
+const buyDaily = days.map(d => ({ label: d.date.slice(5), value: avg(d.electricity.hours.map(h => h.all_in_buy ?? 0)), href: withBase(`/day/${d.date}/`) }));
+const feedDaily = days.map(d => ({ label: d.date.slice(5), value: avg(d.electricity.hours.map(h => h.all_in_feed_in ?? 0)), href: withBase(`/day/${d.date}/`) }));
+const gasDaily = days.map(d => ({ label: d.date.slice(5), value: avg(d.gas.blocks.map(b => b.all_in ?? 0)), href: withBase(`/day/${d.date}/`) }));
+
+const title = `Frank Energie prices in week ${week} (${humanDate(range.from)} – ${humanDate(range.to)})`;
+const desc = `Daily-average Frank Energie buy, feed-in and gas prices for week ${week}.`;
+---
+<Layout title={title} description={desc} path={`/week/${week}/`}>
+  <Breadcrumbs items={crumbs} />
+  <h1>Week {week}</h1>
+  <p>{humanDate(range.from)} – {humanDate(range.to)}</p>
+  <section><h2>Electricity (buy)</h2><SvgChart title="Daily average buy" points={buyDaily} unit="EUR/kWh" xAxisLabel="Day" /></section>
+  <section><h2>Electricity (feed-in)</h2><SvgChart title="Daily average feed-in" points={feedDaily} unit="EUR/kWh" xAxisLabel="Day" /></section>
+  <section><h2>Gas</h2><SvgChart title="Daily average gas" points={gasDaily} unit="EUR/m3" xAxisLabel="Day" /></section>
+</Layout>

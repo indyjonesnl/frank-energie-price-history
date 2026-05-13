@@ -1,0 +1,5 @@
+# Methodology
+
+Each day at 13:00, 15:00, and 20:00 Europe/Amsterdam local time, a GitHub Action calls Frank Energie's GraphQL endpoint and stores the response under `data/YYYY/MM/DD.json`. If the response has not changed since the last successful fetch, no commit is made.
+
+Aggregate statistics (min, max, average, median) are computed from these raw files for week, month, and year periods. Both the raw market price and the consumer all-in price (market + sourcing markup + energy tax + VAT) are stored side by side.

@@ -1,0 +1,41 @@
+---
+import Layout from '@components/Layout.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import SvgChart from '@components/SvgChart.astro';
+import { loadAllDays } from '@lib/data-loader';
+import { summarize } from '@lib/stats';
+import { humanDate, hourLabel, humanMonth } from '@lib/format';
+import { yearKey, monthKey } from '@lib/periods';
+import { withBase } from '@lib/seo';
+
+export async function getStaticPaths() {
+  const days = loadAllDays();
+  return days.map(d => ({ params: { date: d.date }, props: { day: d } }));
+}
+const { day } = Astro.props;
+const dateObj = new Date(`${day.date}T12:00:00Z`);
+const yk = yearKey(dateObj);
+const mk = monthKey(dateObj);
+const crumbs = [
+  { label: 'Home', href: withBase('/') },
+  { label: 'Electricity (feed-in)', href: withBase('/feed-in/') },
+  { label: yk, href: withBase(`/feed-in/year/${yk}/`) },
+  { label: humanMonth(mk), href: withBase(`/feed-in/month/${mk}/`) },
+  { label: humanDate(day.date) }
+];
+const points = day.electricity.hours.map(h => ({ label: hourLabel(h.from), value: h.all_in_feed_in ?? 0 }));
+const stats = summarize(points.map(p => p.value));
+const negativeFeedInCount = day.electricity.hours.filter(h => h.all_in_feed_in !== null && h.all_in_feed_in < 0).length;
+const title = `Electricity feed-in price on ${humanDate(day.date)} — Frank Energie | min ${stats.min.toFixed(4)} – max ${stats.max.toFixed(4)} €/kWh`;
+const desc = `Frank Energie hourly electricity feed-in price on ${humanDate(day.date)}. Average ${stats.avg.toFixed(4)} €/kWh.`;
+---
+<Layout title={title} description={desc} path={`/feed-in/day/${day.date}/`}>
+  <Breadcrumbs items={crumbs} />
+  <h1>Electricity (feed-in) on {humanDate(day.date)}</h1>
+  {negativeFeedInCount > 0 && (
+    <p class="negative-warning text-sm text-orange-600 -mt-2 mb-2">
+      Negative prices: {negativeFeedInCount} {negativeFeedInCount === 1 ? 'hour' : 'hours'}
+    </p>
+  )}
+  <SvgChart title={title} points={points} unit="EUR/kWh" xAxisLabel="Hour" />
+</Layout>

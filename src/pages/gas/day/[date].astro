@@ -1,0 +1,35 @@
+---
+import Layout from '@components/Layout.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import SvgChart from '@components/SvgChart.astro';
+import { loadAllDays } from '@lib/data-loader';
+import { summarize } from '@lib/stats';
+import { humanDate, hourRange, humanMonth } from '@lib/format';
+import { yearKey, monthKey } from '@lib/periods';
+import { withBase } from '@lib/seo';
+
+export async function getStaticPaths() {
+  const days = loadAllDays();
+  return days.map(d => ({ params: { date: d.date }, props: { day: d } }));
+}
+const { day } = Astro.props;
+const dateObj = new Date(`${day.date}T12:00:00Z`);
+const yk = yearKey(dateObj);
+const mk = monthKey(dateObj);
+const crumbs = [
+  { label: 'Home', href: withBase('/') },
+  { label: 'Gas', href: withBase('/gas/') },
+  { label: yk, href: withBase(`/gas/year/${yk}/`) },
+  { label: humanMonth(mk), href: withBase(`/gas/month/${mk}/`) },
+  { label: humanDate(day.date) }
+];
+const points = day.gas.blocks.map(b => ({ label: hourRange(b.from, b.to), value: b.all_in ?? 0 }));
+const stats = summarize(points.map(p => p.value));
+const title = `Gas price on ${humanDate(day.date)} — Frank Energie | min ${stats.min.toFixed(4)} – max ${stats.max.toFixed(4)} €/m3`;
+const desc = `Frank Energie gas price on ${humanDate(day.date)}. Average ${stats.avg.toFixed(4)} €/m3.`;
+---
+<Layout title={title} description={desc} path={`/gas/day/${day.date}/`}>
+  <Breadcrumbs items={crumbs} />
+  <h1>Gas on {humanDate(day.date)}</h1>
+  <SvgChart title={title} points={points} unit="EUR/m3" xAxisLabel="Hour" />
+</Layout>

@@ -1,0 +1,399 @@
+{
+  "_query": "\n  query MarketPrices($startDate: Date!, $endDate: Date!) {\n    marketPricesElectricity(startDate: $startDate, endDate: $endDate) {\n      from\n      till\n      marketPrice\n      marketPriceTax\n      sourcingMarkupPrice\n      energyTaxPrice\n    }\n    marketPricesGas(startDate: $startDate, endDate: $endDate) {\n      from\n      till\n      marketPrice\n      marketPriceTax\n      sourcingMarkupPrice\n      energyTaxPrice\n    }\n  }\n",
+  "_variables": {
+    "startDate": "2026-01-04",
+    "endDate": "2026-01-05"
+  },
+  "_endpoint": "https://graphql.frankenergie.nl/",
+  "_fetched_at": "2026-05-07T08:00:42.234Z",
+  "data": {
+    "marketPricesElectricity": [
+      {
+        "from": "2026-01-03T23:00:00.000Z",
+        "till": "2026-01-04T00:00:00.000Z",
+        "marketPrice": 0.08882,
+        "marketPriceTax": 0.01865,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T00:00:00.000Z",
+        "till": "2026-01-04T01:00:00.000Z",
+        "marketPrice": 0.08533,
+        "marketPriceTax": 0.01792,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T01:00:00.000Z",
+        "till": "2026-01-04T02:00:00.000Z",
+        "marketPrice": 0.08504,
+        "marketPriceTax": 0.01786,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T02:00:00.000Z",
+        "till": "2026-01-04T03:00:00.000Z",
+        "marketPrice": 0.08375,
+        "marketPriceTax": 0.01759,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T03:00:00.000Z",
+        "till": "2026-01-04T04:00:00.000Z",
+        "marketPrice": 0.08256,
+        "marketPriceTax": 0.01734,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T04:00:00.000Z",
+        "till": "2026-01-04T05:00:00.000Z",
+        "marketPrice": 0.08341,
+        "marketPriceTax": 0.01752,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T05:00:00.000Z",
+        "till": "2026-01-04T06:00:00.000Z",
+        "marketPrice": 0.0838,
+        "marketPriceTax": 0.0176,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T06:00:00.000Z",
+        "till": "2026-01-04T07:00:00.000Z",
+        "marketPrice": 0.0865,
+        "marketPriceTax": 0.01817,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T07:00:00.000Z",
+        "till": "2026-01-04T08:00:00.000Z",
+        "marketPrice": 0.08813,
+        "marketPriceTax": 0.01851,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T08:00:00.000Z",
+        "till": "2026-01-04T09:00:00.000Z",
+        "marketPrice": 0.0943,
+        "marketPriceTax": 0.0198,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T09:00:00.000Z",
+        "till": "2026-01-04T10:00:00.000Z",
+        "marketPrice": 0.09476,
+        "marketPriceTax": 0.0199,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T10:00:00.000Z",
+        "till": "2026-01-04T11:00:00.000Z",
+        "marketPrice": 0.09088,
+        "marketPriceTax": 0.01908,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T11:00:00.000Z",
+        "till": "2026-01-04T12:00:00.000Z",
+        "marketPrice": 0.08954,
+        "marketPriceTax": 0.0188,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T12:00:00.000Z",
+        "till": "2026-01-04T13:00:00.000Z",
+        "marketPrice": 0.08678,
+        "marketPriceTax": 0.01822,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T13:00:00.000Z",
+        "till": "2026-01-04T14:00:00.000Z",
+        "marketPrice": 0.09183,
+        "marketPriceTax": 0.01928,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T14:00:00.000Z",
+        "till": "2026-01-04T15:00:00.000Z",
+        "marketPrice": 0.09292,
+        "marketPriceTax": 0.01951,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T15:00:00.000Z",
+        "till": "2026-01-04T16:00:00.000Z",
+        "marketPrice": 0.09923,
+        "marketPriceTax": 0.02084,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T16:00:00.000Z",
+        "till": "2026-01-04T17:00:00.000Z",
+        "marketPrice": 0.11843,
+        "marketPriceTax": 0.02487,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T17:00:00.000Z",
+        "till": "2026-01-04T18:00:00.000Z",
+        "marketPrice": 0.12118,
+        "marketPriceTax": 0.02545,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T18:00:00.000Z",
+        "till": "2026-01-04T19:00:00.000Z",
+        "marketPrice": 0.11972,
+        "marketPriceTax": 0.02514,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T19:00:00.000Z",
+        "till": "2026-01-04T20:00:00.000Z",
+        "marketPrice": 0.11245,
+        "marketPriceTax": 0.02361,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T20:00:00.000Z",
+        "till": "2026-01-04T21:00:00.000Z",
+        "marketPrice": 0.09969,
+        "marketPriceTax": 0.02093,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T21:00:00.000Z",
+        "till": "2026-01-04T22:00:00.000Z",
+        "marketPrice": 0.09561,
+        "marketPriceTax": 0.02008,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      },
+      {
+        "from": "2026-01-04T22:00:00.000Z",
+        "till": "2026-01-04T23:00:00.000Z",
+        "marketPrice": 0.08921,
+        "marketPriceTax": 0.01873,
+        "sourcingMarkupPrice": 0.01815,
+        "energyTaxPrice": 0.11085
+      }
+    ],
+    "marketPricesGas": [
+      {
+        "from": "2026-01-03T23:00:00.000Z",
+        "till": "2026-01-04T00:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T00:00:00.000Z",
+        "till": "2026-01-04T01:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T01:00:00.000Z",
+        "till": "2026-01-04T02:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T02:00:00.000Z",
+        "till": "2026-01-04T03:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T03:00:00.000Z",
+        "till": "2026-01-04T04:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T04:00:00.000Z",
+        "till": "2026-01-04T05:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T05:00:00.000Z",
+        "till": "2026-01-04T06:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T06:00:00.000Z",
+        "till": "2026-01-04T07:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T07:00:00.000Z",
+        "till": "2026-01-04T08:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T08:00:00.000Z",
+        "till": "2026-01-04T09:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T09:00:00.000Z",
+        "till": "2026-01-04T10:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T10:00:00.000Z",
+        "till": "2026-01-04T11:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T11:00:00.000Z",
+        "till": "2026-01-04T12:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T12:00:00.000Z",
+        "till": "2026-01-04T13:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T13:00:00.000Z",
+        "till": "2026-01-04T14:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T14:00:00.000Z",
+        "till": "2026-01-04T15:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T15:00:00.000Z",
+        "till": "2026-01-04T16:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T16:00:00.000Z",
+        "till": "2026-01-04T17:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T17:00:00.000Z",
+        "till": "2026-01-04T18:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T18:00:00.000Z",
+        "till": "2026-01-04T19:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T19:00:00.000Z",
+        "till": "2026-01-04T20:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T20:00:00.000Z",
+        "till": "2026-01-04T21:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T21:00:00.000Z",
+        "till": "2026-01-04T22:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      },
+      {
+        "from": "2026-01-04T22:00:00.000Z",
+        "till": "2026-01-04T23:00:00.000Z",
+        "marketPrice": 0.28512,
+        "marketPriceTax": 0.05987,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.7268
+      }
+    ]
+  }
+}

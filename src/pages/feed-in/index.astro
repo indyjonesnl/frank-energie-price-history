@@ -1,0 +1,36 @@
+---
+import Layout from '@components/Layout.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import { loadAllDays } from '@lib/data-loader';
+import { isoWeekKey, monthKey, yearKey } from '@lib/periods';
+import { humanDate } from '@lib/format';
+import { withBase } from '@lib/seo';
+
+const days = loadAllDays();
+const today = days[days.length - 1];
+const todayDate = today ? new Date(`${today.date}T12:00:00Z`) : new Date();
+const week = isoWeekKey(todayDate);
+const month = monthKey(todayDate);
+const year = yearKey(todayDate);
+
+const COMMODITY_LABEL = 'Electricity (feed-in)';
+const COMMODITY_SLUG = 'feed-in';
+const COMMODITY_DESC = 'What Frank Energie consumers receive per kWh exported to the grid, hour by hour.';
+const crumbs = [
+  { label: 'Home', href: withBase('/') },
+  { label: COMMODITY_LABEL }
+];
+---
+<Layout title={`${COMMODITY_LABEL} prices — Frank Energie Price History`} description={COMMODITY_DESC} path={`/${COMMODITY_SLUG}/`}>
+  <Breadcrumbs items={crumbs} />
+  <h1>{COMMODITY_LABEL}</h1>
+  <p>{COMMODITY_DESC}</p>
+  {today ? (
+    <ul>
+      <li><a href={`./day/${today.date}/`} class="inline-block py-1">Today: {humanDate(today.date)}</a></li>
+      <li><a href={`./week/${week}/`} class="inline-block py-1">This week ({week})</a></li>
+      <li><a href={`./month/${month}/`} class="inline-block py-1">This month</a></li>
+      <li><a href={`./year/${year}/`} class="inline-block py-1">This year</a></li>
+    </ul>
+  ) : <p>No data yet.</p>}
+</Layout>

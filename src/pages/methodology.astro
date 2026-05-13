@@ -1,0 +1,15 @@
+---
+import Layout from '@components/Layout.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import Methodology from '../content/methodology.mdx';
+import { withBase } from '@lib/seo';
+
+const crumbs = [
+  { label: 'Home', href: withBase('/') },
+  { label: 'Methodology' }
+];
+---
+<Layout title="Methodology — Frank Energie Price History" description="How the site fetches, stores, and aggregates Frank Energie prices." path="/methodology/">
+  <Breadcrumbs items={crumbs} />
+  <Methodology />
+</Layout>

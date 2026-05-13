@@ -1,0 +1,43 @@
+---
+import Layout from '@components/Layout.astro';
+import SvgChart from '@components/SvgChart.astro';
+import { loadAllDays } from '@lib/data-loader';
+import { hourLabel, humanDate } from '@lib/format';
+import { isoWeekKey, monthKey, yearKey } from '@lib/periods';
+
+const days = loadAllDays();
+const today = days[days.length - 1];
+const recent = days.slice(-7).reverse();
+const todayDate = today ? new Date(`${today.date}T12:00:00Z`) : new Date();
+const week = isoWeekKey(todayDate);
+const month = monthKey(todayDate);
+const year = yearKey(todayDate);
+const elecBuy = today ? today.electricity.hours.map(h => ({ label: hourLabel(h.from), value: h.all_in_buy ?? 0 })) : [];
+---
+<Layout title="Frank Energie Price History" description="Historical Frank Energie electricity (buy and feed-in) and gas prices, charted by day, week, month, and year." path="/">
+  <h1>Frank Energie Price History</h1>
+  {today ? (
+    <>
+      <h2>Today: {humanDate(today.date)}</h2>
+      <SvgChart title="Buy electricity by hour" points={elecBuy} unit="EUR/kWh" xAxisLabel="Hour" />
+      <p><a href={`./day/${today.date}/`} class="inline-block py-1">Full breakdown for {humanDate(today.date)}</a></p>
+    </>
+  ) : <p>No data yet.</p>}
+  <h2>Browse</h2>
+  <ul>
+    <li><a href="./today/" class="inline-block py-1">Today (48-hour overview)</a></li>
+    <li><a href={`./week/${week}/`} class="inline-block py-1">This week</a></li>
+    <li><a href={`./month/${month}/`} class="inline-block py-1">This month</a></li>
+    <li><a href={`./year/${year}/`} class="inline-block py-1">This year</a></li>
+    <li><a href="./archive/" class="inline-block py-1">Full archive</a></li>
+    <li><a href="./api/" class="inline-block py-1">Public data API</a></li>
+  </ul>
+  <h2>By commodity</h2>
+  <ul>
+    <li><a href="./electricity/" class="inline-block py-1">Electricity (buy)</a></li>
+    <li><a href="./feed-in/" class="inline-block py-1">Electricity (feed-in)</a></li>
+    <li><a href="./gas/" class="inline-block py-1">Gas</a></li>
+  </ul>
+  <h2>Recent days</h2>
+  <ul>{recent.map(d => <li><a href={`./day/${d.date}/`} class="inline-block py-1">{humanDate(d.date)}</a></li>)}</ul>
+</Layout>

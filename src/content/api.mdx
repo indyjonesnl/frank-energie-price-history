@@ -1,0 +1,54 @@
+# Public data API
+
+Frank Energie's hourly price data is republished here as a static, versioned JSON API. No authentication, no rate limit (CORS open by default — GitHub Pages serves with `Access-Control-Allow-Origin: *`).
+
+**Base URL**: `https://indyjonesnl.github.io/frank-energie-price-history/api/v1/`
+
+## Per-day raw data
+
+Verbatim GraphQL response per day, wrapped with audit metadata.
+
+- `GET /api/v1/data/{year}/{month}/{day}.json` — e.g. `/api/v1/data/2026/05/06.json`
+
+Path components are zero-padded (`05` not `5`).
+
+### Indexes
+
+- `GET /api/v1/data/index.json` — schema info, year list, total days, url patterns
+- `GET /api/v1/data/{year}/index.json` — months in that year
+- `GET /api/v1/data/{year}/{month}/index.json` — days in that month
+
+### Per-day shape
+
+```json
+{
+  "_query": "query MarketPrices($startDate: Date!, $endDate: Date!) { ... }",
+  "_variables": { "startDate": "2026-05-06", "endDate": "2026-05-07" },
+  "_endpoint": "https://graphql.frankenergie.nl/",
+  "_fetched_at": "2026-05-06T13:00:00Z",
+  "data": {
+    "marketPricesElectricity": [...],
+    "marketPricesGas": [...]
+  }
+}
+```
+
+The `data` object is the verbatim response from `https://graphql.frankenergie.nl/`. The `_*` fields are sidecar metadata identifying when and how the data was retrieved. Each electricity entry has `from`, `till`, `marketPrice`, `marketPriceTax`, `sourcingMarkupPrice`, `energyTaxPrice`.
+
+## Aggregates
+
+Derived per-period statistics (min, max, avg, median) for buy electricity, feed-in electricity, and gas — both market price and consumer all-in price.
+
+- `GET /api/v1/aggregates/day/{YYYY-MM-DD}.json`
+- `GET /api/v1/aggregates/week/{YYYY-Www}.json` (ISO week)
+- `GET /api/v1/aggregates/month/{YYYY-MM}.json`
+- `GET /api/v1/aggregates/year/{YYYY}.json`
+- `GET /api/v1/aggregates/index.json` — discoverability
+
+## License
+
+Code: MIT. Data is republished from Frank Energie's public API under fair-use attribution. Site not affiliated with Frank Energie.
+
+## Versioning
+
+The path prefix `/api/v1/` is the version anchor. If the on-disk format changes incompatibly, a new major version (`/api/v2/`) will be served alongside.

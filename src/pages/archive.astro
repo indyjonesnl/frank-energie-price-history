@@ -1,0 +1,47 @@
+---
+import Layout from '@components/Layout.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import { loadAllDays } from '@lib/data-loader';
+import { isoWeekKey, monthKey, yearKey } from '@lib/periods';
+import { humanDate } from '@lib/format';
+import { withBase } from '@lib/seo';
+
+const days = loadAllDays();
+
+const byYear = new Map<string, typeof days>();
+const weeks = new Set<string>();
+const months = new Set<string>();
+const years = new Set<string>();
+
+for (const d of days) {
+  const date = new Date(`${d.date}T12:00:00Z`);
+  const yk = yearKey(date);
+  byYear.set(yk, [...(byYear.get(yk) ?? []), d]);
+  weeks.add(isoWeekKey(date));
+  months.add(monthKey(date));
+  years.add(yk);
+}
+
+const sortedYears = [...byYear.keys()].sort().reverse();
+
+const crumbs = [
+  { label: 'Home', href: withBase('/') },
+  { label: 'Archive' }
+];
+---
+<Layout title="Archive — Frank Energie Price History" description="Browse every available day, week, month, and year of Frank Energie price history." path="/archive/">
+  <Breadcrumbs items={crumbs} />
+  <h1>Archive</h1>
+  {sortedYears.length === 0 ? (
+    <p>No data yet.</p>
+  ) : sortedYears.map(yk => (
+    <section>
+      <h2><a href={`../year/${yk}/`} class="inline-block py-1">{yk}</a></h2>
+      <ul>
+        {(byYear.get(yk) ?? []).slice().reverse().map(d => (
+          <li><a href={`../day/${d.date}/`} class="inline-block py-1">{humanDate(d.date)}</a></li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</Layout>

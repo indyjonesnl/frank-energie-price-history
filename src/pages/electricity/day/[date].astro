@@ -1,0 +1,41 @@
+---
+import Layout from '@components/Layout.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import SvgChart from '@components/SvgChart.astro';
+import { loadAllDays } from '@lib/data-loader';
+import { summarize } from '@lib/stats';
+import { humanDate, hourLabel, humanMonth } from '@lib/format';
+import { yearKey, monthKey } from '@lib/periods';
+import { withBase } from '@lib/seo';
+
+export async function getStaticPaths() {
+  const days = loadAllDays();
+  return days.map(d => ({ params: { date: d.date }, props: { day: d } }));
+}
+const { day } = Astro.props;
+const dateObj = new Date(`${day.date}T12:00:00Z`);
+const yk = yearKey(dateObj);
+const mk = monthKey(dateObj);
+const crumbs = [
+  { label: 'Home', href: withBase('/') },
+  { label: 'Electricity (buy)', href: withBase('/electricity/') },
+  { label: yk, href: withBase(`/electricity/year/${yk}/`) },
+  { label: humanMonth(mk), href: withBase(`/electricity/month/${mk}/`) },
+  { label: humanDate(day.date) }
+];
+const points = day.electricity.hours.map(h => ({ label: hourLabel(h.from), value: h.all_in_buy ?? 0 }));
+const stats = summarize(points.map(p => p.value));
+const negativeBuyCount = day.electricity.hours.filter(h => h.all_in_buy !== null && h.all_in_buy < 0).length;
+const title = `Electricity buy price on ${humanDate(day.date)} — Frank Energie | min ${stats.min.toFixed(4)} – max ${stats.max.toFixed(4)} €/kWh`;
+const desc = `Frank Energie hourly electricity buy price on ${humanDate(day.date)}. Average ${stats.avg.toFixed(4)} €/kWh.`;
+---
+<Layout title={title} description={desc} path={`/electricity/day/${day.date}/`}>
+  <Breadcrumbs items={crumbs} />
+  <h1>Electricity (buy) on {humanDate(day.date)}</h1>
+  {negativeBuyCount > 0 && (
+    <p class="negative-warning text-sm text-orange-600 -mt-2 mb-2">
+      Negative prices: {negativeBuyCount} {negativeBuyCount === 1 ? 'hour' : 'hours'}
+    </p>
+  )}
+  <SvgChart title={title} points={points} unit="EUR/kWh" xAxisLabel="Hour" />
+</Layout>

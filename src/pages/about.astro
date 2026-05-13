@@ -1,0 +1,15 @@
+---
+import Layout from '@components/Layout.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import About from '../content/about.mdx';
+import { withBase } from '@lib/seo';
+
+const crumbs = [
+  { label: 'Home', href: withBase('/') },
+  { label: 'About' }
+];
+---
+<Layout title="About — Frank Energie Price History" description="About this site, why it exists, and how it's built." path="/about/">
+  <Breadcrumbs items={crumbs} />
+  <About />
+</Layout>

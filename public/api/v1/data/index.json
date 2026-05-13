@@ -1,0 +1,25 @@
+{
+  "schema": "frankenergie-graphql",
+  "schema_version": "1.0",
+  "endpoint": "https://graphql.frankenergie.nl/",
+  "earliest": "2023-01-01",
+  "latest": "2026-05-13",
+  "years": [
+    "2023",
+    "2024",
+    "2025",
+    "2026"
+  ],
+  "total_days": 1229,
+  "fields": [
+    "from",
+    "till",
+    "marketPrice",
+    "marketPriceTax",
+    "sourcingMarkupPrice",
+    "energyTaxPrice"
+  ],
+  "url_pattern": "/api/v1/data/{year}/{month}/{day}.json",
+  "year_index_pattern": "/api/v1/data/{year}/index.json",
+  "month_index_pattern": "/api/v1/data/{year}/{month}/index.json"
+}

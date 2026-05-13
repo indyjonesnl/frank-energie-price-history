@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+html.hide-warnings .chart-warning,
+html.hide-warnings .negative-warning {
+  display: none;
+}
+
+@theme {
+  --color-brand: oklch(0.55 0.22 256);
+}
+
+@layer base {
+  main h1 {
+    @apply text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900 mt-2 mb-4 sm:mb-6;
+  }
+  main h2 {
+    @apply text-lg sm:text-xl font-semibold text-slate-900 mt-6 sm:mt-8 mb-2 sm:mb-3;
+  }
+  main h3 {
+    @apply text-base font-semibold text-slate-900 mt-4 mb-2;
+  }
+  main p {
+    @apply leading-relaxed text-slate-700 my-3;
+  }
+  main ul {
+    @apply list-disc list-inside my-3 space-y-1 text-slate-700;
+  }
+  main a {
+    @apply text-blue-600 hover:underline;
+  }
+  main section {
+    @apply my-4 sm:my-6;
+  }
+  main figure svg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+}

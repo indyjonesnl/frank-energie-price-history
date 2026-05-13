@@ -1,0 +1,129 @@
+---
+import Layout from '@components/Layout.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import SvgChart from '@components/SvgChart.astro';
+import { loadAllDays } from '@lib/data-loader';
+import { summarize } from '@lib/stats';
+import { humanDate, hourLabel, hourRange } from '@lib/format';
+import { withBase } from '@lib/seo';
+
+const days = loadAllDays();
+
+// loadAllDays returns days sorted ascending by date.
+// "Today" = latest available day. If the API returned tomorrow's data already
+// (it publishes after ~14:15 CET), the most-recent day in the dataset is
+// "tomorrow" and the day before it is "today". We detect that by checking
+// whether the last two days are consecutive on the calendar.
+let actualToday: (typeof days)[number] | undefined = days[days.length - 1];
+let actualTomorrow: typeof actualToday | null = null;
+if (days.length >= 2) {
+  const last = days[days.length - 1];
+  const secondLast = days[days.length - 2];
+  const lastDate = new Date(`${last.date}T12:00:00Z`).getTime();
+  const prevDate = new Date(`${secondLast.date}T12:00:00Z`).getTime();
+  const oneDayMs = 24 * 3600 * 1000;
+  if (lastDate - prevDate === oneDayMs) {
+    actualToday = secondLast;
+    actualTomorrow = last;
+  }
+}
+
+const todayRef = actualToday;
+
+const buyPoints = todayRef ? [
+  ...todayRef.electricity.hours.map(h => ({
+    label: hourLabel(h.from),
+    value: h.all_in_buy ?? 0,
+    href: withBase(`/day/${todayRef.date}/`),
+  })),
+  ...(actualTomorrow ? actualTomorrow.electricity.hours.map(h => ({
+    label: hourLabel(h.from),
+    value: h.all_in_buy ?? 0,
+    href: withBase(`/day/${actualTomorrow.date}/`),
+  })) : []),
+] : [];
+
+const feedPoints = todayRef ? [
+  ...todayRef.electricity.hours.map(h => ({
+    label: hourLabel(h.from),
+    value: h.all_in_feed_in ?? 0,
+    href: withBase(`/day/${todayRef.date}/`),
+  })),
+  ...(actualTomorrow ? actualTomorrow.electricity.hours.map(h => ({
+    label: hourLabel(h.from),
+    value: h.all_in_feed_in ?? 0,
+    href: withBase(`/day/${actualTomorrow.date}/`),
+  })) : []),
+] : [];
+
+const gasPoints = todayRef ? [
+  ...todayRef.gas.blocks.map(b => ({
+    label: hourRange(b.from, b.to),
+    value: b.all_in ?? 0,
+    href: withBase(`/day/${todayRef.date}/`),
+  })),
+  ...(actualTomorrow ? actualTomorrow.gas.blocks.map(b => ({
+    label: hourRange(b.from, b.to),
+    value: b.all_in ?? 0,
+    href: withBase(`/day/${actualTomorrow.date}/`),
+  })) : []),
+] : [];
+
+const buyStats = buyPoints.length > 0 ? summarize(buyPoints.map(p => p.value)) : null;
+
+const todayDivider = (todayRef && actualTomorrow) ? todayRef.electricity.hours.length : undefined;
+const gasDivider = (todayRef && actualTomorrow) ? todayRef.gas.blocks.length : undefined;
+
+const dateRange = todayRef
+  ? (actualTomorrow
+      ? `${humanDate(todayRef.date)} → ${humanDate(actualTomorrow.date)}`
+      : humanDate(todayRef.date))
+  : 'No data available';
+
+const title = todayRef
+  ? `Today's prices: ${dateRange} — Frank Energie`
+  : `Today's prices — Frank Energie`;
+const desc = todayRef && buyStats
+  ? `Hourly Frank Energie buy, feed-in, and gas prices for ${dateRange}. Buy ranges ${buyStats.min.toFixed(4)} – ${buyStats.max.toFixed(4)} €/kWh.`
+  : `Hourly Frank Energie buy, feed-in, and gas prices.`;
+const crumbs = [
+  { label: 'Home', href: withBase('/') },
+  { label: 'Today' }
+];
+---
+<Layout title={title} description={desc} path="/today/" wide={true}>
+  <Breadcrumbs items={crumbs} />
+  <h1>Today's prices</h1>
+  {todayRef ? (
+    <>
+      <p>{dateRange}{actualTomorrow ? '' : ' (tomorrow not yet published)'}</p>
+
+      <section>
+        <h2>Electricity (buy)</h2>
+        <SvgChart title="Buy price by hour" points={buyPoints} unit="EUR/kWh" width={1500} height={300} xAxisLabel="Hour" dayBoundaryIndex={todayDivider} />
+      </section>
+
+      <section>
+        <h2>Electricity (feed-in)</h2>
+        <SvgChart title="Feed-in price by hour" points={feedPoints} unit="EUR/kWh" width={1500} height={300} xAxisLabel="Hour" dayBoundaryIndex={todayDivider} />
+      </section>
+
+      <section>
+        <h2>Gas</h2>
+        <SvgChart title="Gas price by block" points={gasPoints} unit="EUR/m3" width={1500} height={300} xAxisLabel="Block start (Europe/Amsterdam)" dayBoundaryIndex={gasDivider} annotateAll={true} />
+      </section>
+
+      <p>
+        <a href={withBase(`/day/${todayRef.date}/`)} class="inline-block py-1">Today's full breakdown</a>
+        {actualTomorrow && (
+          <>
+            {' · '}
+            <a href={withBase(`/day/${actualTomorrow.date}/`)} class="inline-block py-1">Tomorrow's full breakdown</a>
+          </>
+        )}
+      </p>
+    </>
+  ) : (
+    <p>No data available yet.</p>
+  )}
+</Layout>

@@ -1,0 +1,71 @@
+---
+import Layout from '@components/Layout.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import SvgChart from '@components/SvgChart.astro';
+import { loadAllDays } from '@lib/data-loader';
+import { summarize } from '@lib/stats';
+import { humanDate, hourLabel, hourRange, humanMonth } from '@lib/format';
+import { yearKey, monthKey } from '@lib/periods';
+import { withBase } from '@lib/seo';
+
+export async function getStaticPaths() {
+  const days = loadAllDays();
+  return days.map(d => ({ params: { date: d.date }, props: { day: d } }));
+}
+
+const { day } = Astro.props;
+const dateObj = new Date(`${day.date}T12:00:00Z`);
+const yk = yearKey(dateObj);
+const mk = monthKey(dateObj);
+const crumbs = [
+  { label: 'Home', href: withBase('/') },
+  { label: yk, href: withBase(`/year/${yk}/`) },
+  { label: humanMonth(mk), href: withBase(`/month/${mk}/`) },
+  { label: humanDate(day.date) }
+];
+const elecMarket = day.electricity.hours.map(h => ({ label: hourLabel(h.from), value: h.market_price ?? 0 }));
+const elecBuy    = day.electricity.hours.map(h => ({ label: hourLabel(h.from), value: h.all_in_buy ?? 0 }));
+const elecFeed   = day.electricity.hours.map(h => ({ label: hourLabel(h.from), value: h.all_in_feed_in ?? 0 }));
+const gasAllIn   = day.gas.blocks.map(b => ({ label: hourRange(b.from, b.to), value: b.all_in ?? 0 }));
+
+const buyStats  = summarize(elecBuy.map(p => p.value));
+const negativeBuyCount = day.electricity.hours.filter(h => h.all_in_buy !== null && h.all_in_buy < 0).length;
+const negativeFeedInCount = day.electricity.hours.filter(h => h.all_in_feed_in !== null && h.all_in_feed_in < 0).length;
+
+const title = `Frank Energie prices on ${humanDate(day.date)} | min ${buyStats.min.toFixed(4)} – max ${buyStats.max.toFixed(4)} €/kWh`;
+const desc  = `Hourly Frank Energie buy/feed-in electricity and gas prices on ${humanDate(day.date)}. Min ${buyStats.min.toFixed(4)}, max ${buyStats.max.toFixed(4)} €/kWh.`;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: title,
+  description: desc,
+  temporalCoverage: day.date
+};
+---
+<Layout title={title} description={desc} path={`/day/${day.date}/`} jsonLd={jsonLd}>
+  <Breadcrumbs items={crumbs} />
+  <h1>Frank Energie prices on {humanDate(day.date)}</h1>
+  <p>Buy electricity ranged from <strong>{buyStats.min.toFixed(4)}</strong> to <strong>{buyStats.max.toFixed(4)}</strong> €/kWh, averaging <strong>{buyStats.avg.toFixed(4)}</strong>.</p>
+  <section>
+    <h2>Electricity (buy)</h2>
+    {negativeBuyCount > 0 && (
+      <p class="negative-warning text-sm text-orange-600 -mt-2 mb-2">
+        Negative prices: {negativeBuyCount} {negativeBuyCount === 1 ? 'hour' : 'hours'}
+      </p>
+    )}
+    <SvgChart title="Buy price by hour" points={elecBuy} unit="EUR/kWh" xAxisLabel="Hour" />
+  </section>
+  <section>
+    <h2>Electricity (feed-in)</h2>
+    {negativeFeedInCount > 0 && (
+      <p class="negative-warning text-sm text-orange-600 -mt-2 mb-2">
+        Negative prices: {negativeFeedInCount} {negativeFeedInCount === 1 ? 'hour' : 'hours'}
+      </p>
+    )}
+    <SvgChart title="Feed-in price by hour" points={elecFeed} unit="EUR/kWh" xAxisLabel="Hour" />
+  </section>
+  <section>
+    <h2>Gas</h2>
+    <SvgChart title="Gas price by 12-hour block" points={gasAllIn} unit="EUR/m3" xAxisLabel="Hour" />
+  </section>
+</Layout>

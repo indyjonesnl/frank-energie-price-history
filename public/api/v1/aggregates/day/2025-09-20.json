@@ -1,0 +1,46 @@
+{
+  "key": "2025-09-20",
+  "period": "day",
+  "from": "2025-09-20",
+  "to": "2025-09-20",
+  "electricity_buy_market": {
+    "min": -0.00149,
+    "max": 0.12574,
+    "avg": 0.05835624999999999,
+    "median": 0.074895
+  },
+  "electricity_buy_all_in": {
+    "min": 0.13921,
+    "max": 0.29316,
+    "avg": 0.21162208333333335,
+    "median": 0.231635
+  },
+  "electricity_feed_in_market": {
+    "min": -0.00149,
+    "max": 0.12574,
+    "avg": 0.05835624999999999,
+    "median": 0.074895
+  },
+  "electricity_feed_in_all_in": {
+    "min": -0.00149,
+    "max": 0.12574,
+    "avg": 0.05835624999999999,
+    "median": 0.074895
+  },
+  "gas_market": {
+    "min": 0.30927,
+    "max": 0.31816,
+    "avg": 0.31371499999999997,
+    "median": 0.31371499999999997
+  },
+  "gas_all_in": {
+    "min": 1.15365,
+    "max": 1.1644,
+    "avg": 1.1590250000000002,
+    "median": 1.1590250000000002
+  },
+  "samples": {
+    "electricity_hours": 24,
+    "gas_blocks": 2
+  }
+}

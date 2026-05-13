@@ -1,0 +1,15 @@
+---
+import Layout from '@components/Layout.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import Api from '../content/api.mdx';
+import { withBase } from '@lib/seo';
+
+const crumbs = [
+  { label: 'Home', href: withBase('/') },
+  { label: 'API' }
+];
+---
+<Layout title="Public data API — Frank Energie Price History" description="Versioned JSON API exposing Frank Energie's raw GraphQL data and derived aggregates." path="/api/">
+  <Breadcrumbs items={crumbs} />
+  <Api />
+</Layout>

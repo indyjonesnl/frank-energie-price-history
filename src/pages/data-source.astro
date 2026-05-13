@@ -1,0 +1,15 @@
+---
+import Layout from '@components/Layout.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import DataSource from '../content/data-source.mdx';
+import { withBase } from '@lib/seo';
+
+const crumbs = [
+  { label: 'Home', href: withBase('/') },
+  { label: 'Data source' }
+];
+---
+<Layout title="Data source — Frank Energie Price History" description="The data feeding this site comes from Frank Energie's public GraphQL API." path="/data-source/">
+  <Breadcrumbs items={crumbs} />
+  <DataSource />
+</Layout>

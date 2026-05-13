@@ -1,0 +1,7 @@
+# Data source
+
+Source: [Frank Energie](https://www.frankenergie.nl/) public GraphQL endpoint at `https://graphql.frankenergie.nl/`.
+
+Raw responses are committed to this repository under [`/public/api/v1/data/`](https://github.com/indyjonesnl/frank-energie-price-history/tree/main/public/api/v1/data) and never modified after capture. Each filename is the local date the data describes.
+
+The same files are served as a public, versioned API at `https://indyjonesnl.github.io/frank-energie-price-history/api/v1/data/YYYY/MM/DD.json`, with pre-computed aggregates at `https://indyjonesnl.github.io/frank-energie-price-history/api/v1/aggregates/{day,week,month,year}/<key>.json`. See the [API documentation](/frank-energie-price-history/api/) for full details and indexes.

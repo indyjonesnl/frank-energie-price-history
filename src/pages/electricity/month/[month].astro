@@ -1,0 +1,67 @@
+---
+import Layout from '@components/Layout.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import SvgChart from '@components/SvgChart.astro';
+import { loadAllDays } from '@lib/data-loader';
+import { avg } from '@lib/stats';
+import { monthKey, monthRange } from '@lib/periods';
+import { humanDate, humanMonth } from '@lib/format';
+import { withBase, isActive } from '@lib/seo';
+
+export async function getStaticPaths() {
+  const days = loadAllDays();
+  const months = new Map<string, typeof days>();
+  for (const d of days) {
+    const k = monthKey(new Date(`${d.date}T12:00:00Z`));
+    months.set(k, [...(months.get(k) ?? []), d]);
+  }
+  return [...months.entries()].map(([month, daysInMonth]) => ({ params: { month }, props: { month, days: daysInMonth } }));
+}
+
+const { month, days } = Astro.props;
+const currentPath = `/electricity/month/${month}/`;
+const range = monthRange(month);
+const monthYear = humanMonth(month);
+const yk = month.slice(0, 4);
+const crumbs = [
+  { label: 'Home', href: withBase('/') },
+  { label: 'Electricity (buy)', href: withBase('/electricity/') },
+  { label: yk, href: withBase(`/electricity/year/${yk}/`) },
+  { label: monthYear }
+];
+const negBuyHours = (d: typeof days[number]) =>
+  d.electricity.hours.filter(h => h.all_in_buy !== null && h.all_in_buy < 0).length;
+const points = days.map(d => {
+  const wc = negBuyHours(d);
+  return {
+    label: d.date.slice(8),
+    value: avg(d.electricity.hours.map(h => h.all_in_buy ?? 0)),
+    href: withBase(`/electricity/day/${d.date}/`),
+    warning: wc > 0,
+    warningCount: wc > 0 ? wc : undefined,
+  };
+});
+const title = `Electricity buy prices in ${monthYear} — Frank Energie`;
+const desc = `Daily-average Frank Energie electricity buy prices for ${monthYear}.`;
+---
+<Layout title={title} description={desc} path={`/electricity/month/${month}/`}>
+  <Breadcrumbs items={crumbs} />
+  <h1>Electricity (buy) in {monthYear}</h1>
+  <p>{humanDate(range.from)} – {humanDate(range.to)}</p>
+  <SvgChart title="Daily average buy" points={points} unit="EUR/kWh" xAxisLabel="Day of month" />
+  <section>
+    <h2>Days</h2>
+    <ul class="flex flex-wrap gap-x-3 gap-y-1 text-sm">
+      {days.map((d) => {
+        const targetPath = `/electricity/day/${d.date}/`;
+        return (
+          <li>
+            {isActive(currentPath, targetPath)
+              ? <span class="text-slate-900 font-medium">{d.date.slice(8)}</span>
+              : <a href={withBase(targetPath)} class="inline-block py-1 text-blue-600 hover:underline">{d.date.slice(8)}</a>}
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+</Layout>

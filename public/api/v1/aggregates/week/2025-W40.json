@@ -1,0 +1,46 @@
+{
+  "key": "2025-W40",
+  "period": "week",
+  "from": "2025-09-29",
+  "to": "2025-10-05",
+  "electricity_buy_market": {
+    "min": -0.00484,
+    "max": 0.35365,
+    "avg": 0.07545505952380956,
+    "median": 0.079555
+  },
+  "electricity_buy_all_in": {
+    "min": 0.13515,
+    "max": 0.56893,
+    "avg": 0.23231095238095253,
+    "median": 0.23727
+  },
+  "electricity_feed_in_market": {
+    "min": -0.00484,
+    "max": 0.35365,
+    "avg": 0.07545505952380956,
+    "median": 0.079555
+  },
+  "electricity_feed_in_all_in": {
+    "min": -0.00484,
+    "max": 0.35365,
+    "avg": 0.07545505952380956,
+    "median": 0.079555
+  },
+  "gas_market": {
+    "min": 0.30084,
+    "max": 0.31607,
+    "avg": 0.30887615384615386,
+    "median": 0.31052
+  },
+  "gas_all_in": {
+    "min": 1.14345,
+    "max": 1.16187,
+    "avg": 1.1531715384615386,
+    "median": 1.15516
+  },
+  "samples": {
+    "electricity_hours": 168,
+    "gas_blocks": 13
+  }
+}

@@ -1,0 +1,399 @@
+{
+  "_query": "\n  query MarketPrices($startDate: Date!, $endDate: Date!) {\n    marketPricesElectricity(startDate: $startDate, endDate: $endDate) {\n      from\n      till\n      marketPrice\n      marketPriceTax\n      sourcingMarkupPrice\n      energyTaxPrice\n    }\n    marketPricesGas(startDate: $startDate, endDate: $endDate) {\n      from\n      till\n      marketPrice\n      marketPriceTax\n      sourcingMarkupPrice\n      energyTaxPrice\n    }\n  }\n",
+  "_variables": {
+    "startDate": "2023-06-10",
+    "endDate": "2023-06-11"
+  },
+  "_endpoint": "https://graphql.frankenergie.nl/",
+  "_fetched_at": "2026-05-07T07:38:12.731Z",
+  "data": {
+    "marketPricesElectricity": [
+      {
+        "from": "2023-06-09T22:00:00.000Z",
+        "till": "2023-06-09T23:00:00.000Z",
+        "marketPrice": 0.08903,
+        "marketPriceTax": 0.0187,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-09T23:00:00.000Z",
+        "till": "2023-06-10T00:00:00.000Z",
+        "marketPrice": 0.0841,
+        "marketPriceTax": 0.01766,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T00:00:00.000Z",
+        "till": "2023-06-10T01:00:00.000Z",
+        "marketPrice": 0.08413,
+        "marketPriceTax": 0.01767,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T01:00:00.000Z",
+        "till": "2023-06-10T02:00:00.000Z",
+        "marketPrice": 0.08032,
+        "marketPriceTax": 0.01687,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T02:00:00.000Z",
+        "till": "2023-06-10T03:00:00.000Z",
+        "marketPrice": 0.07744,
+        "marketPriceTax": 0.01626,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T03:00:00.000Z",
+        "till": "2023-06-10T04:00:00.000Z",
+        "marketPrice": 0.07987,
+        "marketPriceTax": 0.01677,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T04:00:00.000Z",
+        "till": "2023-06-10T05:00:00.000Z",
+        "marketPrice": 0.07943,
+        "marketPriceTax": 0.01668,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T05:00:00.000Z",
+        "till": "2023-06-10T06:00:00.000Z",
+        "marketPrice": 0.085,
+        "marketPriceTax": 0.01785,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T06:00:00.000Z",
+        "till": "2023-06-10T07:00:00.000Z",
+        "marketPrice": 0.08181,
+        "marketPriceTax": 0.01718,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T07:00:00.000Z",
+        "till": "2023-06-10T08:00:00.000Z",
+        "marketPrice": 0.05971,
+        "marketPriceTax": 0.01254,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T08:00:00.000Z",
+        "till": "2023-06-10T09:00:00.000Z",
+        "marketPrice": 0.01006,
+        "marketPriceTax": 0.00211,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T09:00:00.000Z",
+        "till": "2023-06-10T10:00:00.000Z",
+        "marketPrice": -0.01,
+        "marketPriceTax": -0.0021,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T10:00:00.000Z",
+        "till": "2023-06-10T11:00:00.000Z",
+        "marketPrice": -0.02201,
+        "marketPriceTax": -0.00462,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T11:00:00.000Z",
+        "till": "2023-06-10T12:00:00.000Z",
+        "marketPrice": -0.05627,
+        "marketPriceTax": -0.01182,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T12:00:00.000Z",
+        "till": "2023-06-10T13:00:00.000Z",
+        "marketPrice": -0.05005,
+        "marketPriceTax": -0.01051,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T13:00:00.000Z",
+        "till": "2023-06-10T14:00:00.000Z",
+        "marketPrice": -0.01792,
+        "marketPriceTax": -0.00376,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T14:00:00.000Z",
+        "till": "2023-06-10T15:00:00.000Z",
+        "marketPrice": -0.0035,
+        "marketPriceTax": -0.00074,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T15:00:00.000Z",
+        "till": "2023-06-10T16:00:00.000Z",
+        "marketPrice": 0.0445,
+        "marketPriceTax": 0.00935,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T16:00:00.000Z",
+        "till": "2023-06-10T17:00:00.000Z",
+        "marketPrice": 0.07497,
+        "marketPriceTax": 0.01574,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T17:00:00.000Z",
+        "till": "2023-06-10T18:00:00.000Z",
+        "marketPrice": 0.08616,
+        "marketPriceTax": 0.01809,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T18:00:00.000Z",
+        "till": "2023-06-10T19:00:00.000Z",
+        "marketPrice": 0.1074,
+        "marketPriceTax": 0.02255,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T19:00:00.000Z",
+        "till": "2023-06-10T20:00:00.000Z",
+        "marketPrice": 0.11249,
+        "marketPriceTax": 0.02362,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T20:00:00.000Z",
+        "till": "2023-06-10T21:00:00.000Z",
+        "marketPrice": 0.098,
+        "marketPriceTax": 0.02058,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      },
+      {
+        "from": "2023-06-10T21:00:00.000Z",
+        "till": "2023-06-10T22:00:00.000Z",
+        "marketPrice": 0.0873,
+        "marketPriceTax": 0.01833,
+        "sourcingMarkupPrice": 0.02541,
+        "energyTaxPrice": 0.15245
+      }
+    ],
+    "marketPricesGas": [
+      {
+        "from": "2023-06-09T22:00:00.000Z",
+        "till": "2023-06-09T23:00:00.000Z",
+        "marketPrice": 0.26292,
+        "marketPriceTax": 0.05521,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-09T23:00:00.000Z",
+        "till": "2023-06-10T00:00:00.000Z",
+        "marketPrice": 0.26292,
+        "marketPriceTax": 0.05521,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T00:00:00.000Z",
+        "till": "2023-06-10T01:00:00.000Z",
+        "marketPrice": 0.26292,
+        "marketPriceTax": 0.05521,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T01:00:00.000Z",
+        "till": "2023-06-10T02:00:00.000Z",
+        "marketPrice": 0.26292,
+        "marketPriceTax": 0.05521,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T02:00:00.000Z",
+        "till": "2023-06-10T03:00:00.000Z",
+        "marketPrice": 0.26292,
+        "marketPriceTax": 0.05521,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T03:00:00.000Z",
+        "till": "2023-06-10T04:00:00.000Z",
+        "marketPrice": 0.26292,
+        "marketPriceTax": 0.05521,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T04:00:00.000Z",
+        "till": "2023-06-10T05:00:00.000Z",
+        "marketPrice": 0.31134,
+        "marketPriceTax": 0.06538,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T05:00:00.000Z",
+        "till": "2023-06-10T06:00:00.000Z",
+        "marketPrice": 0.31134,
+        "marketPriceTax": 0.06538,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T06:00:00.000Z",
+        "till": "2023-06-10T07:00:00.000Z",
+        "marketPrice": 0.31134,
+        "marketPriceTax": 0.06538,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T07:00:00.000Z",
+        "till": "2023-06-10T08:00:00.000Z",
+        "marketPrice": 0.31134,
+        "marketPriceTax": 0.06538,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T08:00:00.000Z",
+        "till": "2023-06-10T09:00:00.000Z",
+        "marketPrice": 0.31134,
+        "marketPriceTax": 0.06538,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T09:00:00.000Z",
+        "till": "2023-06-10T10:00:00.000Z",
+        "marketPrice": 0.31134,
+        "marketPriceTax": 0.06538,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T10:00:00.000Z",
+        "till": "2023-06-10T11:00:00.000Z",
+        "marketPrice": 0.31134,
+        "marketPriceTax": 0.06538,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T11:00:00.000Z",
+        "till": "2023-06-10T12:00:00.000Z",
+        "marketPrice": 0.31134,
+        "marketPriceTax": 0.06538,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T12:00:00.000Z",
+        "till": "2023-06-10T13:00:00.000Z",
+        "marketPrice": 0.31134,
+        "marketPriceTax": 0.06538,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T13:00:00.000Z",
+        "till": "2023-06-10T14:00:00.000Z",
+        "marketPrice": 0.31134,
+        "marketPriceTax": 0.06538,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T14:00:00.000Z",
+        "till": "2023-06-10T15:00:00.000Z",
+        "marketPrice": 0.31134,
+        "marketPriceTax": 0.06538,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T15:00:00.000Z",
+        "till": "2023-06-10T16:00:00.000Z",
+        "marketPrice": 0.31134,
+        "marketPriceTax": 0.06538,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T16:00:00.000Z",
+        "till": "2023-06-10T17:00:00.000Z",
+        "marketPrice": 0.31134,
+        "marketPriceTax": 0.06538,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T17:00:00.000Z",
+        "till": "2023-06-10T18:00:00.000Z",
+        "marketPrice": 0.31134,
+        "marketPriceTax": 0.06538,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T18:00:00.000Z",
+        "till": "2023-06-10T19:00:00.000Z",
+        "marketPrice": 0.31134,
+        "marketPriceTax": 0.06538,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T19:00:00.000Z",
+        "till": "2023-06-10T20:00:00.000Z",
+        "marketPrice": 0.31134,
+        "marketPriceTax": 0.06538,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T20:00:00.000Z",
+        "till": "2023-06-10T21:00:00.000Z",
+        "marketPrice": 0.31134,
+        "marketPriceTax": 0.06538,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      },
+      {
+        "from": "2023-06-10T21:00:00.000Z",
+        "till": "2023-06-10T22:00:00.000Z",
+        "marketPrice": 0.31134,
+        "marketPriceTax": 0.06538,
+        "sourcingMarkupPrice": 0.07986,
+        "energyTaxPrice": 0.59266
+      }
+    ]
+  }
+}

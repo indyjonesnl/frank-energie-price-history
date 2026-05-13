@@ -1,0 +1,82 @@
+---
+import Layout from '@components/Layout.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import SvgChart from '@components/SvgChart.astro';
+import { loadAllDays } from '@lib/data-loader';
+import { avg } from '@lib/stats';
+import { monthKey, monthRange } from '@lib/periods';
+import { humanDate, humanMonth } from '@lib/format';
+import { withBase, isActive } from '@lib/seo';
+
+export async function getStaticPaths() {
+  const days = loadAllDays();
+  const months = new Map<string, typeof days>();
+  for (const d of days) {
+    const k = monthKey(new Date(`${d.date}T12:00:00Z`));
+    months.set(k, [...(months.get(k) ?? []), d]);
+  }
+  return [...months.entries()].map(([month, daysInMonth]) => ({ params: { month }, props: { month, days: daysInMonth } }));
+}
+
+const { month, days } = Astro.props;
+const currentPath = `/month/${month}/`;
+const range = monthRange(month);
+const monthYear = humanMonth(month);
+const yk = month.slice(0, 4);
+const crumbs = [
+  { label: 'Home', href: withBase('/') },
+  { label: yk, href: withBase(`/year/${yk}/`) },
+  { label: monthYear }
+];
+const negBuyHours = (d: typeof days[number]) =>
+  d.electricity.hours.filter(h => h.all_in_buy !== null && h.all_in_buy < 0).length;
+const negFeedHours = (d: typeof days[number]) =>
+  d.electricity.hours.filter(h => h.all_in_feed_in !== null && h.all_in_feed_in < 0).length;
+const buyDaily = days.map(d => {
+  const wc = negBuyHours(d);
+  return {
+    label: d.date.slice(8),
+    value: avg(d.electricity.hours.map(h => h.all_in_buy ?? 0)),
+    href: withBase(`/day/${d.date}/`),
+    warning: wc > 0,
+    warningCount: wc > 0 ? wc : undefined,
+  };
+});
+const feedDaily = days.map(d => {
+  const wc = negFeedHours(d);
+  return {
+    label: d.date.slice(8),
+    value: avg(d.electricity.hours.map(h => h.all_in_feed_in ?? 0)),
+    href: withBase(`/day/${d.date}/`),
+    warning: wc > 0,
+    warningCount: wc > 0 ? wc : undefined,
+  };
+});
+const gasDaily = days.map(d => ({ label: d.date.slice(8), value: avg(d.gas.blocks.map(b => b.all_in ?? 0)), href: withBase(`/day/${d.date}/`) }));
+
+const title = `Frank Energie prices in ${monthYear}`;
+const desc = `Daily-average Frank Energie buy, feed-in and gas prices for ${monthYear}.`;
+---
+<Layout title={title} description={desc} path={`/month/${month}/`}>
+  <Breadcrumbs items={crumbs} />
+  <h1>{monthYear}</h1>
+  <p>{humanDate(range.from)} – {humanDate(range.to)}</p>
+  <section><h2>Electricity (buy)</h2><SvgChart title="Daily average buy" points={buyDaily} unit="EUR/kWh" xAxisLabel="Day of month" /></section>
+  <section><h2>Electricity (feed-in)</h2><SvgChart title="Daily average feed-in" points={feedDaily} unit="EUR/kWh" xAxisLabel="Day of month" /></section>
+  <section><h2>Gas</h2><SvgChart title="Daily average gas" points={gasDaily} unit="EUR/m3" xAxisLabel="Day of month" /></section>
+  <section>
+    <h2>Days</h2>
+    <ul class="flex flex-wrap gap-x-3 gap-y-1 text-sm">
+      {days.map((d) => {
+        const targetPath = `/day/${d.date}/`;
+        return (
+          <li>
+            {isActive(currentPath, targetPath)
+              ? <span class="text-slate-900 font-medium">{d.date.slice(8)}</span>
+              : <a href={withBase(targetPath)} class="inline-block py-1 text-blue-600 hover:underline">{d.date.slice(8)}</a>}
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+</Layout>

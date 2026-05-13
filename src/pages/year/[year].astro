@@ -1,0 +1,83 @@
+---
+import Layout from '@components/Layout.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import SvgChart from '@components/SvgChart.astro';
+import { loadAllDays } from '@lib/data-loader';
+import { avg } from '@lib/stats';
+import { yearKey, monthKey } from '@lib/periods';
+import { withBase, isActive } from '@lib/seo';
+import { monthName } from '@lib/format';
+
+export async function getStaticPaths() {
+  const days = loadAllDays();
+  const years = new Map<string, typeof days>();
+  for (const d of days) {
+    const k = yearKey(new Date(`${d.date}T12:00:00Z`));
+    years.set(k, [...(years.get(k) ?? []), d]);
+  }
+  return [...years.entries()].map(([year, daysInYear]) => ({ params: { year }, props: { year, days: daysInYear } }));
+}
+
+const { year, days } = Astro.props;
+const currentPath = `/year/${year}/`;
+const crumbs = [
+  { label: 'Home', href: withBase('/') },
+  { label: year }
+];
+const months = new Map<string, typeof days>();
+for (const d of days) {
+  const k = monthKey(new Date(`${d.date}T12:00:00Z`));
+  months.set(k, [...(months.get(k) ?? []), d]);
+}
+const negBuyDayCount = (daysInMonth: typeof days) =>
+  daysInMonth.filter(d => d.electricity.hours.some(h => h.all_in_buy !== null && h.all_in_buy < 0)).length;
+
+const negFeedDayCount = (daysInMonth: typeof days) =>
+  daysInMonth.filter(d => d.electricity.hours.some(h => h.all_in_feed_in !== null && h.all_in_feed_in < 0)).length;
+
+const monthlyAvg = (
+  extract: (d: typeof days[number]) => number[],
+  hrefBuilder: (k: string) => string,
+  warnCounter?: (daysInMonth: typeof days) => number,
+) =>
+  [...months.entries()].map(([k, daysInMonth]) => {
+    const wc = warnCounter ? warnCounter(daysInMonth) : 0;
+    return {
+      label: monthName(k),
+      shortLabel: monthName(k, true),
+      value: avg(daysInMonth.flatMap(extract)),
+      href: hrefBuilder(k),
+      warning: wc > 0,
+      warningCount: wc > 0 ? wc : undefined,
+    };
+  });
+
+const buyDaily  = monthlyAvg(d => d.electricity.hours.map(h => h.all_in_buy ?? 0), k => withBase(`/month/${k}/`), negBuyDayCount);
+const feedDaily = monthlyAvg(d => d.electricity.hours.map(h => h.all_in_feed_in ?? 0), k => withBase(`/month/${k}/`), negFeedDayCount);
+const gasDaily  = monthlyAvg(d => d.gas.blocks.map(b => b.all_in ?? 0), k => withBase(`/month/${k}/`));
+
+const title = `Frank Energie prices in ${year}`;
+const desc = `Monthly-average Frank Energie buy, feed-in and gas prices for ${year}.`;
+---
+<Layout title={title} description={desc} path={`/year/${year}/`}>
+  <Breadcrumbs items={crumbs} />
+  <h1>{year}</h1>
+  <section><h2>Electricity (buy)</h2><SvgChart title="Monthly average buy" points={buyDaily} unit="EUR/kWh" xAxisLabel="Month" /></section>
+  <section><h2>Electricity (feed-in)</h2><SvgChart title="Monthly average feed-in" points={feedDaily} unit="EUR/kWh" xAxisLabel="Month" /></section>
+  <section><h2>Gas</h2><SvgChart title="Monthly average gas" points={gasDaily} unit="EUR/m3" xAxisLabel="Month" /></section>
+  <section>
+    <h2>Months</h2>
+    <ul class="flex flex-wrap gap-x-3 gap-y-1 text-sm">
+      {[...months.keys()].sort().map((mk) => {
+        const targetPath = `/month/${mk}/`;
+        return (
+          <li>
+            {isActive(currentPath, targetPath)
+              ? <span class="text-slate-900 font-medium">{monthName(mk, true)}</span>
+              : <a href={withBase(targetPath)} class="inline-block py-1 text-blue-600 hover:underline">{monthName(mk, true)}</a>}
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+</Layout>

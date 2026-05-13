@@ -1,0 +1,123 @@
+name: update-and-deploy
+
+on:
+  schedule:
+    # Europe/Amsterdam 13:00 / 15:00 / 20:00 — six entries to cover CET (UTC+1) and CEST (UTC+2)
+    - cron: "0 11 * * *" # CEST 13:00
+    - cron: "0 13 * * *" # CEST 15:00
+    - cron: "0 18 * * *" # CEST 20:00
+    - cron: "0 12 * * *" # CET 13:00
+    - cron: "0 14 * * *" # CET 15:00
+    - cron: "0 19 * * *" # CET 20:00
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "scripts/**"
+      - "public/**"
+      - "astro.config.mjs"
+      - "package.json"
+      - "pnpm-lock.yaml"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: deploy-pages
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Time gate (schedule only)
+        if: github.event_name == 'schedule'
+        run: |
+          HOUR=$(TZ=Europe/Amsterdam date +%H)
+          if [[ "$HOUR" != "13" && "$HOUR" != "15" && "$HOUR" != "20" ]]; then
+            echo "Skipping: local hour $HOUR is not in {13,15,20}"
+            echo "skip=true" >> $GITHUB_ENV
+          fi
+
+      - name: Checkout
+        if: env.skip != 'true'
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup pnpm
+        if: env.skip != 'true'
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node
+        if: env.skip != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        if: env.skip != 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Fetch
+        if: env.skip != 'true'
+        id: fetch
+        run: |
+          set +e
+          pnpm fetch
+          CODE=$?
+          set -e
+          echo "exit=$CODE" >> $GITHUB_OUTPUT
+          if [[ $CODE -ne 0 && $CODE -ne 10 ]]; then exit $CODE; fi
+
+      - name: Decide if rebuild needed
+        if: env.skip != 'true'
+        id: decide
+        run: |
+          if [[ "${{ github.event_name }}" == "schedule" && "${{ steps.fetch.outputs.exit }}" == "0" ]]; then
+            echo "rebuild=false" >> $GITHUB_OUTPUT
+            echo "Data unchanged on scheduled run; skipping rebuild."
+          else
+            echo "rebuild=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Aggregate
+        if: env.skip != 'true' && steps.decide.outputs.rebuild == 'true'
+        run: pnpm aggregate
+
+      - name: Generate indexes
+        if: env.skip != 'true' && steps.decide.outputs.rebuild == 'true'
+        run: pnpm exec tsx scripts/index.ts
+
+      - name: Commit data + aggregates
+        if: env.skip != 'true' && steps.decide.outputs.rebuild == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/api/v1/
+          if git diff --cached --quiet; then
+            echo "No data changes to commit."
+          else
+            git commit -m "data: update [skip ci]"
+            git push
+          fi
+
+      - name: Build
+        if: env.skip != 'true' && steps.decide.outputs.rebuild == 'true'
+        run: pnpm build
+
+      - name: Upload Pages artifact
+        if: env.skip != 'true' && steps.decide.outputs.rebuild == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy Pages
+        if: env.skip != 'true' && steps.decide.outputs.rebuild == 'true'
+        uses: actions/deploy-pages@v4

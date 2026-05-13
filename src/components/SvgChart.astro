@@ -1,0 +1,39 @@
+---
+import { buildSvgChart, type ChartPoint } from '@lib/svg-chart';
+interface Props {
+  title: string;
+  points: ChartPoint[];
+  unit: string;
+  width?: number;
+  height?: number;
+  xAxisLabel?: string;
+  dayBoundaryIndex?: number;
+  annotateAll?: boolean;
+}
+const { title, points, unit, width = 800, height = 280, xAxisLabel, dayBoundaryIndex, annotateAll } = Astro.props;
+const svg = buildSvgChart({ title, points, unit, width, height, xAxisLabel, dayBoundaryIndex, annotateAll });
+---
+<figure class="my-4">
+  <Fragment set:html={svg} />
+  <figcaption class="sr-only">{title}</figcaption>
+  <details class="mt-4 text-sm">
+    <summary class="cursor-pointer text-slate-600 hover:text-blue-600">Show data table</summary>
+    <table class="mt-2 w-full border-collapse text-sm">
+      <caption class="text-left text-slate-500 mb-1">{title} ({unit})</caption>
+      <thead>
+        <tr class="border-b border-slate-200">
+          <th class="text-left py-1 pr-4 font-medium text-slate-700">{xAxisLabel ?? 'Label'}</th>
+          <th class="text-left py-1 font-medium text-slate-700">Price ({unit})</th>
+        </tr>
+      </thead>
+      <tbody>
+        {points.map(p => (
+          <tr class="border-b border-slate-100">
+            <td class="py-1 pr-4 text-slate-700">{p.label}</td>
+            <td class="py-1 text-slate-700">{p.value.toFixed(4)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </details>
+</figure>
