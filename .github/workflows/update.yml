@@ -2,13 +2,15 @@ name: update-and-deploy
 
 on:
   schedule:
-    # Europe/Amsterdam 13:00 / 15:00 / 20:00 — six entries to cover CET (UTC+1) and CEST (UTC+2)
-    - cron: "0 11 * * *" # CEST 13:00
-    - cron: "0 13 * * *" # CEST 15:00
-    - cron: "0 18 * * *" # CEST 20:00
-    - cron: "0 12 * * *" # CET 13:00
-    - cron: "0 14 * * *" # CET 15:00
-    - cron: "0 19 * * *" # CET 20:00
+    # ~6 daily attempts spanning the window when Frank's day-ahead prices land.
+    # GitHub cron drifts up to ~2h, so we don't gate on local clock; we rely on
+    # the fetch step being idempotent (no data change → no rebuild → quick exit).
+    - cron: "0 11 * * *"
+    - cron: "0 12 * * *"
+    - cron: "0 13 * * *"
+    - cron: "0 14 * * *"
+    - cron: "0 18 * * *"
+    - cron: "0 19 * * *"
   workflow_dispatch:
   push:
     branches: [main]
@@ -19,6 +21,7 @@ on:
       - "astro.config.mjs"
       - "package.json"
       - "pnpm-lock.yaml"
+      - ".github/workflows/**"
 
 permissions:
   contents: write
@@ -34,48 +37,27 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       rebuild: ${{ steps.decide.outputs.rebuild }}
-      skip: ${{ steps.gate.outputs.skip }}
     steps:
-      - name: Time gate (schedule only)
-        id: gate
-        run: |
-          if [[ "${{ github.event_name }}" == "schedule" ]]; then
-            HOUR=$(TZ=Europe/Amsterdam date +%H)
-            if [[ "$HOUR" != "13" && "$HOUR" != "15" && "$HOUR" != "20" ]]; then
-              echo "Skipping: local hour $HOUR is not in {13,15,20}"
-              echo "skip=true" >> $GITHUB_OUTPUT
-            else
-              echo "skip=false" >> $GITHUB_OUTPUT
-            fi
-          else
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
-
       - name: Checkout
-        if: steps.gate.outputs.skip != 'true'
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup pnpm
-        if: steps.gate.outputs.skip != 'true'
         uses: pnpm/action-setup@v4
         with:
           version: 9
 
       - name: Setup Node
-        if: steps.gate.outputs.skip != 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
 
       - name: Install
-        if: steps.gate.outputs.skip != 'true'
         run: pnpm install --frozen-lockfile
 
       - name: Fetch
-        if: steps.gate.outputs.skip != 'true'
         id: fetch
         run: |
           set +e
@@ -86,7 +68,6 @@ jobs:
           if [[ $CODE -ne 0 && $CODE -ne 10 ]]; then exit $CODE; fi
 
       - name: Decide if rebuild needed
-        if: steps.gate.outputs.skip != 'true'
         id: decide
         run: |
           if [[ "${{ github.event_name }}" == "schedule" && "${{ steps.fetch.outputs.exit }}" == "0" ]]; then
@@ -97,15 +78,15 @@ jobs:
           fi
 
       - name: Aggregate
-        if: steps.gate.outputs.skip != 'true' && steps.decide.outputs.rebuild == 'true'
+        if: steps.decide.outputs.rebuild == 'true'
         run: pnpm aggregate
 
       - name: Generate indexes
-        if: steps.gate.outputs.skip != 'true' && steps.decide.outputs.rebuild == 'true'
+        if: steps.decide.outputs.rebuild == 'true'
         run: pnpm exec tsx scripts/index.ts
 
       - name: Commit data + aggregates
-        if: steps.gate.outputs.skip != 'true' && steps.decide.outputs.rebuild == 'true'
+        if: steps.decide.outputs.rebuild == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -118,18 +99,18 @@ jobs:
           fi
 
       - name: Build
-        if: steps.gate.outputs.skip != 'true' && steps.decide.outputs.rebuild == 'true'
+        if: steps.decide.outputs.rebuild == 'true'
         run: pnpm build
 
       - name: Upload Pages artifact
-        if: steps.gate.outputs.skip != 'true' && steps.decide.outputs.rebuild == 'true'
+        if: steps.decide.outputs.rebuild == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
 
   deploy:
     needs: build
-    if: needs.build.outputs.skip != 'true' && needs.build.outputs.rebuild == 'true'
+    if: needs.build.outputs.rebuild == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
