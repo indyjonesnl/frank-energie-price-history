@@ -61,7 +61,7 @@ jobs:
         id: fetch
         run: |
           set +e
-          pnpm fetch
+          pnpm run fetch
           CODE=$?
           set -e
           echo "exit=$CODE" >> $GITHUB_OUTPUT
