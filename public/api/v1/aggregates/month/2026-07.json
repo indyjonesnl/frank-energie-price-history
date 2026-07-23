@@ -6,41 +6,41 @@
   "electricity_buy_market": {
     "min": -0.02301,
     "max": 0.24408,
-    "avg": 0.10347148550724648,
-    "median": 0.121335
+    "avg": 0.10466871527777791,
+    "median": 0.12231
   },
   "electricity_buy_all_in": {
     "min": 0.10116,
     "max": 0.42434,
-    "avg": 0.2542004891304348,
-    "median": 0.27581500000000003
+    "avg": 0.2556491666666668,
+    "median": 0.276995
   },
   "electricity_feed_in_market": {
     "min": -0.02301,
     "max": 0.24408,
-    "avg": 0.10347148550724648,
-    "median": 0.121335
+    "avg": 0.10466871527777791,
+    "median": 0.12231
   },
   "electricity_feed_in_all_in": {
     "min": -0.02301,
     "max": 0.24408,
-    "avg": 0.10347148550724648,
-    "median": 0.121335
+    "avg": 0.10466871527777791,
+    "median": 0.12231
   },
   "gas_market": {
     "min": 0.41614,
     "max": 0.61225,
-    "avg": 0.49100209302325565,
+    "avg": 0.4937577272727271,
     "median": 0.47779
   },
   "gas_all_in": {
     "min": 1.31019,
     "max": 1.54748,
-    "avg": 1.4007720930232557,
+    "avg": 1.4041063636363635,
     "median": 1.3847900000000002
   },
   "samples": {
-    "electricity_hours": 552,
-    "gas_blocks": 43
+    "electricity_hours": 576,
+    "gas_blocks": 44
   }
 }
